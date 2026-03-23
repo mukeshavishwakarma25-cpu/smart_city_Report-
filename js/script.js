@@ -160,13 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 4. File Upload Visualization & Interaction
     if (uploadZone && fileInput) {
-        // Only trigger click if not clicking the checkbox/input directly to avoid loop
-        uploadZone.addEventListener('click', (e) => {
-            if (e.target !== fileInput) {
-                fileInput.click();
-            }
-        });
-        
+        // Automatically handled by <label for="fileInput">, 
+        // we just need the 'change' event to update UI
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];

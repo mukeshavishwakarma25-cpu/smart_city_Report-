@@ -286,6 +286,10 @@ section {
     color: var(--text-muted);
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .upload-zone {
     border: 2px dashed rgba(13, 110, 253, 0.3);
     cursor: pointer;
