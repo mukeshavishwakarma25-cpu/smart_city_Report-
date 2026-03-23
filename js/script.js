@@ -1,6 +1,7 @@
 // Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,6 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -67,8 +69,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. Report Form Submission (Integrated with Firebase)
+    // 3. Report Form Submission (Integrated with Firebase Firestore & Storage)
     const reportForm = document.getElementById('reportForm');
+    const reportFeedback = document.getElementById('reportFeedback');
+    const fileInput = document.getElementById('fileInput');
+    const uploadZone = document.querySelector('.upload-zone');
+    
     if (reportForm) {
         reportForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -77,36 +83,74 @@ document.addEventListener('DOMContentLoaded', function() {
             const issueType = this.querySelector('select').value;
             const location = this.querySelector('input[type="text"]').value;
             const description = this.querySelector('textarea').value;
+            const evidenceFile = fileInput ? fileInput.files[0] : null;
             
             // Get button and show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+            
+            // Clear previous feedback
+            if (reportFeedback) {
+                reportFeedback.className = 'alert alert-info py-2 small';
+                reportFeedback.textContent = 'Submitting your report, please wait...';
+                reportFeedback.classList.remove('d-none');
+            }
 
             try {
-                // Save to Firestore
+                let evidenceUrl = null;
+
+                // 1. Upload File to Firebase Storage if exists
+                if (evidenceFile) {
+                    if (reportFeedback) reportFeedback.textContent = 'Uploading evidence...';
+                    const fileRef = ref(storage, `evidence/${Date.now()}_${evidenceFile.name}`);
+                    const uploadResult = await uploadBytes(fileRef, evidenceFile);
+                    evidenceUrl = await getDownloadURL(uploadResult.ref);
+                }
+
+                // 2. Save Data to Firestore
+                if (reportFeedback) reportFeedback.textContent = 'Saving report metadata...';
                 const docRef = await addDoc(collection(db, "reports"), {
                     issueType: issueType,
                     location: location,
                     description: description,
+                    evidenceUrl: evidenceUrl,
                     status: "Pending",
                     timestamp: serverTimestamp()
                 });
 
                 console.log("Document written with ID: ", docRef.id);
-                alert('Success! Your report has been submitted. Tracking ID: ' + docRef.id);
-                reportForm.reset();
                 
-                // Reset file upload zone visualization if exists
-                const uploadPara = document.querySelector('.upload-zone p');
-                const uploadIcon = document.querySelector('.upload-zone i');
-                if (uploadPara) uploadPara.textContent = 'Click to upload or drag & drop';
-                if (uploadIcon) uploadIcon.className = 'bi bi-cloud-arrow-up display-6 text-primary mb-2';
+                // Show success on screen
+                if (reportFeedback) {
+                    reportFeedback.className = 'alert alert-success py-3';
+                    reportFeedback.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+                            <div>
+                                <strong class="d-block">Success! Report Submitted</strong>
+                                <small>Tracking ID: <strong>${docRef.id}</strong></small>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Reset form and UI
+                reportForm.reset();
+                if (uploadZone) {
+                    const uploadPara = uploadZone.querySelector('p');
+                    const uploadIcon = uploadZone.querySelector('i');
+                    if (uploadPara) uploadPara.textContent = 'Click to upload or drag & drop';
+                    if (uploadIcon) uploadIcon.className = 'bi bi-cloud-arrow-up display-6 text-primary mb-2';
+                }
 
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("Error submitting report. Please try again.");
+                if (reportFeedback) {
+                    reportFeedback.className = 'alert alert-danger py-2 small';
+                    reportFeedback.textContent = 'Error: ' + error.message;
+                }
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -114,18 +158,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. File Upload Visualization
-    const uploadZone = document.querySelector('.upload-zone');
-    const fileInput = document.getElementById('fileInput');
-    
+    // 4. File Upload Visualization & Interaction
     if (uploadZone && fileInput) {
-        uploadZone.addEventListener('click', () => fileInput.click());
+        // Only trigger click if not clicking the checkbox/input directly to avoid loop
+        uploadZone.addEventListener('click', (e) => {
+            if (e.target !== fileInput) {
+                fileInput.click();
+            }
+        });
         
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
-                const fileName = this.files[0].name;
-                uploadZone.querySelector('p').textContent = 'Selected: ' + fileName;
-                uploadZone.querySelector('i').className = 'bi bi-file-earmark-check-fill display-6 text-success mb-2';
+                const file = this.files[0];
+                const fileName = file.name;
+                const uploadPara = uploadZone.querySelector('p');
+                const uploadIcon = uploadZone.querySelector('i');
+                if (uploadPara) uploadPara.textContent = 'Selected: ' + fileName;
+                if (uploadIcon) uploadIcon.className = 'bi bi-file-earmark-check-fill display-6 text-success mb-2';
             }
         });
 
@@ -145,8 +194,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.dataTransfer.files.length) {
                 fileInput.files = e.dataTransfer.files;
                 const fileName = e.dataTransfer.files[0].name;
-                uploadZone.querySelector('p').textContent = 'Dropped: ' + fileName;
-                uploadZone.querySelector('i').className = 'bi bi-file-earmark-check-fill display-6 text-success mb-2';
+                const uploadPara = uploadZone.querySelector('p');
+                const uploadIcon = uploadZone.querySelector('i');
+                if (uploadPara) uploadPara.textContent = 'Dropped: ' + fileName;
+                if (uploadIcon) uploadIcon.className = 'bi bi-file-earmark-check-fill display-6 text-success mb-2';
             }
         });
     }
@@ -155,18 +206,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                window.scrollTo({
-                    top: target.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-                
-                // Close navbar on mobile after click
-                const navbarCollapse = document.getElementById('navbarContent');
-                if (navbarCollapse) {
-                    const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse, { toggle: false });
-                    bsCollapse.hide();
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId.startsWith('#')) {
+                const target = document.querySelector(targetId);
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close navbar on mobile after click
+                    const navbarCollapse = document.getElementById('navbarContent');
+                    if (navbarCollapse && typeof bootstrap !== 'undefined') {
+                        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse, { toggle: false });
+                        bsCollapse.hide();
+                    }
                 }
             }
         });
