@@ -20,7 +20,7 @@ const storage = getStorage(app);
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. Navbar Scroll Effect
+    // 1. Navigation & Scroll Effects
     const mainNav = document.getElementById('mainNav');
     if (mainNav) {
         window.addEventListener('scroll', () => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. City Statistics Chart
+    // 2. City Statistics Chart (Retained from previous version)
     const ctx = document.getElementById('statChart');
     if (ctx) {
         new Chart(ctx, {
@@ -41,11 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: ['Resolved', 'In Progress', 'Pending'],
                 datasets: [{
                     data: [65, 20, 15],
-                    backgroundColor: [
-                        '#948979', // resolved (accent)
-                        '#393E46', // in progress (secondary)
-                        '#222831'  // pending (primary)
-                    ],
+                    backgroundColor: ['#948979', '#393E46', '#222831'],
                     borderWidth: 0,
                     hoverOffset: 10
                 }]
@@ -58,10 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         labels: {
                             usePointStyle: true,
                             padding: 20,
-                            font: {
-                                family: 'Outfit',
-                                size: 12
-                            }
+                            font: { family: 'Outfit', size: 12 }
                         }
                     }
                 }
@@ -69,151 +62,186 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. Report Form Submission (Integrated with Firebase Firestore & Storage)
+    // 3. Report Form Handling
     const reportForm = document.getElementById('reportForm');
-    const reportFeedback = document.getElementById('reportFeedback');
     const fileInput = document.getElementById('fileInput');
     const uploadZone = document.querySelector('.upload-zone');
-    
-    if (reportForm) {
-        reportForm.addEventListener('submit', async function(e) {
+    const imagePreview = document.getElementById('imagePreview');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+    const reportFeedback = document.getElementById('reportFeedback');
+    const removeFileBtn = document.getElementById('removeFile');
+
+    // Utility: Show feedback messages
+    function showFeedback(message, type = 'info', persist = false) {
+        if (!reportFeedback) return;
+        reportFeedback.className = `alert alert-${type} py-3 shadow-sm d-flex align-items-center`;
+        reportFeedback.innerHTML = `
+            <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'}-fill me-3 fs-4"></i>
+            <div>${message}</div>
+        `;
+        reportFeedback.classList.remove('d-none');
+        if (!persist && type !== 'info') {
+            setTimeout(() => reportFeedback.classList.add('d-none'), 8000);
+        }
+    }
+
+    // File selection & preview logic
+    function handleFileSelect(file) {
+        if (!file) return;
+
+        // Validation: Type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            showFeedback('Invalid file type. Please upload a JPG, JPEG, or PNG image.', 'danger');
+            fileInput.value = '';
+            return;
+        }
+
+        // Validation: Size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            showFeedback('File too large. Maximum size is 5MB.', 'danger');
+            fileInput.value = '';
+            return;
+        }
+
+        // Show Preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewImg = imagePreview.querySelector('img');
+            const fileNameDisp = document.getElementById('fileNameDisp');
+            if (previewImg) previewImg.src = e.target.result;
+            if (fileNameDisp) fileNameDisp.textContent = file.name;
+            
+            imagePreview.classList.remove('d-none');
+            uploadPlaceholder.classList.add('d-none');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    if (fileInput) {
+        fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
+    }
+
+    if (removeFileBtn) {
+        removeFileBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            fileInput.value = '';
+            imagePreview.classList.add('d-none');
+            uploadPlaceholder.classList.remove('d-none');
+        });
+    }
+
+    // Drag and Drop Logic
+    if (uploadZone) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, () => uploadZone.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, () => uploadZone.classList.remove('dragover'), false);
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            const file = e.dataTransfer.files[0];
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelect(file);
+        }, false);
+    }
+
+    // Form Submission logic
+    if (reportForm) {
+        reportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = reportForm.querySelector('button[type="submit"]');
+            const originalBtnContent = submitBtn.innerHTML;
             
-            // Get form values
-            const issueType = this.querySelector('select').value;
-            const location = this.querySelector('input[type="text"]').value;
-            const description = this.querySelector('textarea').value;
-            const evidenceFile = fileInput ? fileInput.files[0] : null;
-            
-            // Get button and show loading state
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
-            
-            // Clear previous feedback
-            if (reportFeedback) {
-                reportFeedback.className = 'alert alert-info py-2 small';
-                reportFeedback.textContent = 'Submitting your report, please wait...';
-                reportFeedback.classList.remove('d-none');
+            // Basic UI Validation
+            const issueType = reportForm.querySelector('select').value;
+            const location = reportForm.querySelector('input[type="text"]').value;
+            const description = reportForm.querySelector('textarea').value;
+            const evidenceFile = fileInput.files[0];
+
+            if (!issueType || !location || !description) {
+                showFeedback('Please fill in all required fields.', 'danger');
+                return;
             }
 
-            try {
-                let evidenceUrl = null;
+            // Start Submission
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Submitting Report...
+            `;
+            showFeedback('Initializing submission...', 'info', true);
 
-                // 1. Upload File to Firebase Storage if exists
+            try {
+                let evidenceUrl = '';
+
+                // 1. Upload to Storage if file exists
                 if (evidenceFile) {
-                    if (reportFeedback) reportFeedback.textContent = 'Uploading evidence...';
-                    const fileRef = ref(storage, `evidence/${Date.now()}_${evidenceFile.name}`);
-                    const uploadResult = await uploadBytes(fileRef, evidenceFile);
-                    evidenceUrl = await getDownloadURL(uploadResult.ref);
+                    showFeedback('Uploading image evidence...', 'info', true);
+                    const fileExtension = evidenceFile.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
+                    const storageRef = ref(storage, `reports/${fileName}`);
+                    
+                    const snapshot = await uploadBytes(storageRef, evidenceFile);
+                    evidenceUrl = await getDownloadURL(snapshot.ref);
                 }
 
-                // 2. Save Data to Firestore
-                if (reportFeedback) reportFeedback.textContent = 'Saving report metadata...';
+                // 2. Save to Firestore
+                showFeedback('Saving report data...', 'info', true);
                 const docRef = await addDoc(collection(db, "reports"), {
-                    issueType: issueType,
-                    location: location,
-                    description: description,
-                    evidenceUrl: evidenceUrl,
-                    status: "Pending",
+                    issueType,
+                    location,
+                    description,
+                    evidenceUrl,
+                    status: 'Pending',
                     timestamp: serverTimestamp()
                 });
 
-                console.log("Document written with ID: ", docRef.id);
-                
-                // Show success on screen
-                if (reportFeedback) {
-                    reportFeedback.className = 'alert alert-success py-3';
-                    reportFeedback.innerHTML = `
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-check-circle-fill me-2 fs-4"></i>
-                            <div>
-                                <strong class="d-block">Success! Report Submitted</strong>
-                                <small>Tracking ID: <strong>${docRef.id}</strong></small>
-                            </div>
-                        </div>
-                    `;
-                }
+                // 3. Success Feedback
+                showFeedback('<strong>Success!</strong> Report submitted successfully. Our team will review it shortly.', 'success');
+                console.log("Report saved with ID: ", docRef.id);
 
-                // Reset form and UI
+                // 4. Reset Form
                 reportForm.reset();
-                if (uploadZone) {
-                    const uploadPara = uploadZone.querySelector('p');
-                    const uploadIcon = uploadZone.querySelector('i');
-                    if (uploadPara) uploadPara.textContent = 'Click to upload or drag & drop';
-                    if (uploadIcon) uploadIcon.className = 'bi bi-cloud-arrow-up display-6 text-primary mb-2';
-                }
+                imagePreview.classList.add('d-none');
+                uploadPlaceholder.classList.remove('d-none');
 
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                if (reportFeedback) {
-                    reportFeedback.className = 'alert alert-danger py-2 small';
-                    reportFeedback.textContent = 'Error: ' + error.message;
-                }
+            } catch (err) {
+                console.error("Submission failed:", err);
+                showFeedback(`Submission failed: ${err.message}. Please try again.`, 'danger');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                submitBtn.innerHTML = originalBtnContent;
             }
         });
     }
 
-    // 4. File Upload Visualization & Interaction
-    if (uploadZone && fileInput) {
-        // Automatically handled by <label for="fileInput">, 
-        // we just need the 'change' event to update UI
-        fileInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                const fileName = file.name;
-                const uploadPara = uploadZone.querySelector('p');
-                const uploadIcon = uploadZone.querySelector('i');
-                if (uploadPara) uploadPara.textContent = 'Selected: ' + fileName;
-                if (uploadIcon) uploadIcon.className = 'bi bi-file-earmark-check-fill display-6 text-success mb-2';
-            }
-        });
-
-        // Simple drag and drop
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
-        });
-        
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.style.backgroundColor = '';
-        });
-        
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.style.backgroundColor = '';
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                const fileName = e.dataTransfer.files[0].name;
-                const uploadPara = uploadZone.querySelector('p');
-                const uploadIcon = uploadZone.querySelector('i');
-                if (uploadPara) uploadPara.textContent = 'Dropped: ' + fileName;
-                if (uploadIcon) uploadIcon.className = 'bi bi-file-earmark-check-fill display-6 text-success mb-2';
-            }
-        });
-    }
-
-    // 5. Smooth Scroll for all links
+    // 4. Smooth Scroll for links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
-            if (targetId && targetId.startsWith('#')) {
+            if (targetId && targetId !== '#') {
                 const target = document.querySelector(targetId);
                 if (target) {
                     window.scrollTo({
                         top: target.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    // Close navbar on mobile after click
-                    const navbarCollapse = document.getElementById('navbarContent');
-                    if (navbarCollapse && typeof bootstrap !== 'undefined') {
-                        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse, { toggle: false });
+                    // Close mobile nav
+                    const navCollapse = document.getElementById('navbarContent');
+                    if (navCollapse && typeof bootstrap !== 'undefined') {
+                        const bsCollapse = bootstrap.Collapse.getInstance(navCollapse) || new bootstrap.Collapse(navCollapse, { toggle: false });
                         bsCollapse.hide();
                     }
                 }
