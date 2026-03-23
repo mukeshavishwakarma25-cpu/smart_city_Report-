@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCity Connect | Community Reporting Portal</title>
+    <meta name="description" content="Report local civic issues, track progress, and contribute to a better, smarter city. Join our community reporting portal today.">
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="100">
+
+    <!-- Navbar -->
+    <nav id="mainNav" class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#home">
+                <i class="bi bi-building-fill-gear me-2 text-primary"></i>
+                <span class="fw-bold">SmartCity<span class="text-primary text-gradient">Connect</span></span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#workflow">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#dashboard">Live Issues</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="#report" class="btn btn-primary rounded-pill px-4 shadow-sm">Report Issue</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section d-flex align-items-center">
+        <div class="hero-overlay"></div>
+        <div class="container position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-up">
+                    <span class="badge bg-primary-soft text-primary px-3 py-2 rounded-pill mb-3">Empowering Citizens</span>
+                    <h1 class="display-3 fw-bold mb-4">Building a Better City <br><span class="text-accent-gradient">Together</span></h1>
+                    <p class="lead mb-5 text-secondary-light">The official portal for reporting local civic issues. From potholes to noise pollution, help us identify and resolve problems faster.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#report" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg">Get Started</a>
+                        <a href="#workflow" class="btn btn-outline-light btn-lg rounded-pill px-5">Learn More</a>
+                    </div>
+                    <div class="mt-5 d-flex align-items-center stats-preview">
+                        <div class="me-4">
+                            <h4 class="fw-bold mb-0">1.2k+</h4>
+                            <p class="small text-secondary-light mb-0">Resolved Issues</p>
+                        </div>
+                        <div class="v-divider"></div>
+                        <div class="ms-4">
+                            <h4 class="fw-bold mb-0">98%</h4>
+                            <p class="small text-secondary-light mb-0">Citizen Satisfaction</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="hero-image-wrapper">
+                        <img src="assets/hero.png" alt="Smart City Navigation" class="img-fluid rounded-4 shadow-max">
+                        <div class="floating-card card-1 shadow-lg p-3 bg-white rounded-3">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-success-soft text-success me-3">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </div>
+                                <div class="content">
+                                    <h6 class="mb-0 fw-bold">Issue Resolved</h6>
+                                    <small class="text-muted">Pothole @ North Ave</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="floating-card card-2 shadow-lg p-3 bg-white rounded-3">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-warning-soft text-warning me-3">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div class="content">
+                                    <h6 class="mb-0 fw-bold">In Progress</h6>
+                                    <small class="text-muted">Traffic Signal Fix</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                    <div class="img-grid">
+                        <div class="img-square bg-primary-gradient rounded-4 shadow-lg"></div>
+                        <div class="img-over rounded-4 shadow-lg">
+                            <img src="assets/about.png" alt="Collaborative City Portals" class="img-fluid rounded-4">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5" data-aos="fade-left">
+                    <h5 class="text-primary fw-bold mb-3">Our Mission</h5>
+                    <h2 class="display-5 fw-bold mb-4">Bridging the Gap Between Citizens and Authorities</h2>
+                    <p class="lead text-muted mb-4">Modern cities face complex challenges. We believe the best way to solve them is through transparency and community collaboration.</p>
+                    <ul class="list-unstyled mb-5 custom-list">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-primary mt-1 me-3"></i>
+                            <span>Instant reporting with GPS-enabled location tracking.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-primary mt-1 me-3"></i>
+                            <span>Real-time status updates on submitted complaints.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-primary mt-1 me-3"></i>
+                            <span>Direct line of communication with municipal departments.</span>
+                        </li>
+                    </ul>
+                    <a href="#benefits" class="btn btn-primary px-4 py-2 rounded-pill">Explore Benefits</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-6 fw-bold">Common Report Categories</h2>
+                <p class="text-muted mx-auto" style="max-width: 600px;">Select a category to see reported issues or start your own report.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 col-lg-2-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="category-card text-center p-4 bg-white rounded-4 shadow-hover h-100">
+                        <div class="icon-circle bg-info-soft text-info mb-4">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </div>
+                        <h5 class="fw-bold">Noise</h5>
+                        <p class="small text-muted mb-0">Industrial, construction, and neighbor disturbances.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="category-card text-center p-4 bg-white rounded-4 shadow-hover h-100 border-active">
+                        <div class="icon-circle bg-success-soft text-success mb-4">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                        <h5 class="fw-bold">Garbage</h5>
+                        <p class="small text-muted mb-0">Illegal dumping and overflowing bins.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="category-card text-center p-4 bg-white rounded-4 shadow-hover h-100">
+                        <div class="icon-circle bg-danger-soft text-danger mb-4">
+                            <i class="fa-solid fa-road"></i>
+                        </div>
+                        <h5 class="fw-bold">Roads</h5>
+                        <p class="small text-muted mb-0">Potholes, broken footpaths, and cracks.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="category-card text-center p-4 bg-white rounded-4 shadow-hover h-100">
+                        <div class="icon-circle bg-primary-soft text-primary mb-4">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <h5 class="fw-bold">Water</h5>
+                        <p class="small text-muted mb-0">Leaking pipes and sewage problems.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="category-card text-center p-4 bg-white rounded-4 shadow-hover h-100">
+                        <div class="icon-circle bg-warning-soft text-warning mb-4">
+                            <i class="fa-solid fa-traffic-light"></i>
+                        </div>
+                        <h5 class="fw-bold">Traffic</h5>
+                        <p class="small text-muted mb-0">Faulty signals and congestion reporting.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h5 class="text-primary fw-bold">Process</h5>
+                <h2 class="display-6 fw-bold">How It Works</h2>
+            </div>
+            <div class="row text-center workflow-steps position-relative">
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-icon mb-4">
+                        <div class="number-badge">1</div>
+                        <i class="bi bi-megaphone-fill display-4 text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold">Report</h4>
+                    <p class="text-muted">Citizens submit reports with photos and precise location data via our portal.</p>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-icon mb-4">
+                        <div class="number-badge">2</div>
+                        <i class="bi bi-shield-check display-4 text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold">Review</h4>
+                    <p class="text-muted">Authorized officials review the validity and assign it to the relevant department.</p>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-icon mb-4">
+                        <div class="number-badge">3</div>
+                        <i class="bi bi-hammer display-4 text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold">Action</h4>
+                    <p class="text-muted">Field units resolve the issue and provide evidence-based resolution updates.</p>
+                </div>
+                <div class="workflow-line d-none d-md-block"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Section -->
+    <section id="report" class="section-padding bg-dark text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
+                    <h2 class="display-5 fw-bold mb-4">Submit a New <br><span class="text-primary">Report</span></h2>
+                    <p class="lead text-secondary-light mb-5">Your report helps us prioritize repairs. Please provide as much detail as possible, including a photo of the issue.</p>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="icon-box-sm bg-primary rounded-3 me-3">
+                            <i class="bi bi-lightning-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold">Fast Processing</h6>
+                            <p class="small text-secondary-light mb-0">Reports are routed in under 15 minutes.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="icon-box-sm bg-primary rounded-3 me-3">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold">Location Aware</h6>
+                            <p class="small text-secondary-light mb-0">Automatic GPS detection for accuracy.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7" data-aos="fade-left">
+                    <div class="card border-0 bg-glass p-1">
+                        <div class="card-body p-4 p-md-5">
+                            <form id="reportForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Issue Type</label>
+                                        <select class="form-select bg-dark-soft border-0 py-3 px-4" required>
+                                            <option value="">Select Category</option>
+                                            <option>Noise Pollution</option>
+                                            <option>Garbage Dumping</option>
+                                            <option>Pothole / Road Repair</option>
+                                            <option>Water Leakage</option>
+                                            <option>Traffic Problem</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Location</label>
+                                        <input type="text" class="form-control bg-dark-soft border-0 py-3 px-4" placeholder="Street, Area or Landmark" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Description</label>
+                                        <textarea class="form-control bg-dark-soft border-0 py-3 px-4" rows="3" placeholder="Describe the issue in detail..." required></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Upload Evidence</label>
+                                        <div class="upload-zone py-4 text-center rounded-3 bg-dark-soft">
+                                            <i class="bi bi-cloud-arrow-up display-6 text-primary mb-2"></i>
+                                            <p class="small text-muted mb-0">Click to upload or drag & drop</p>
+                                            <input type="file" class="d-none" id="fileInput">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold">Submit Report</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard/Issues Section -->
+    <section id="dashboard" class="section-padding">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-end mb-5" data-aos="fade-up">
+                <div>
+                    <h5 class="text-primary fw-bold">Live Status</h5>
+                    <h2 class="display-6 fw-bold">Recent Reports</h2>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <button class="btn btn-outline-primary rounded-pill px-4 me-2">All Issues</button>
+                    <button class="btn btn-primary rounded-pill px-4">Map View</button>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="issue-list">
+                        <!-- Issue Card 1 -->
+                        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" data-aos="fade-right">
+                            <div class="row g-0">
+                                <div class="col-sm-4 bg-cover d-none d-sm-block" style="background-image: url('assets/pothole.png');"></div>
+                                <div class="col-sm-8">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-danger-soft text-danger">Pending Review</span>
+                                            <small class="text-muted">2 hours ago</small>
+                                        </div>
+                                        <h5 class="fw-bold">Severe Pothole Cluster</h5>
+                                        <p class="text-muted small mb-3">Main Highway, Sector 4. Causes significant speed reduction and hazard for motorcyclists.</p>
+                                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                                <span class="small fw-semibold">22.5 N, 88.3 E</span>
+                                            </div>
+                                            <a href="#" class="btn btn-link link-primary p-0 text-decoration-none">View Details <i class="bi bi-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Issue Card 2 -->
+                        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" data-aos="fade-right" data-aos-delay="100">
+                            <div class="row g-0">
+                                <div class="col-sm-4 bg-cover d-none d-sm-block" style="background-image: url('assets/streetlight.png');"></div>
+                                <div class="col-sm-8">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-warning-soft text-warning">Work in Progress</span>
+                                            <small class="text-muted">Yesterday</small>
+                                        </div>
+                                        <h5 class="fw-bold">Broken Streetlight #402</h5>
+                                        <p class="text-muted small mb-3">Corner of Oak St. and 5th. Area is completely dark at night, affecting safety.</p>
+                                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                                <span class="small fw-semibold">Oak Street, Zone B</span>
+                                            </div>
+                                            <a href="#" class="btn btn-link link-primary p-0 text-decoration-none">View Details <i class="bi bi-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Issue Card 3 -->
+                        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" data-aos="fade-right" data-aos-delay="200">
+                            <div class="row g-0">
+                                <div class="col-sm-4 bg-cover d-none d-sm-block" style="background-image: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=400');"></div>
+                                <div class="col-sm-8">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-success-soft text-success">Resolved</span>
+                                            <small class="text-muted">3 days ago</small>
+                                        </div>
+                                        <h5 class="fw-bold">Garbage Accumulation</h5>
+                                        <p class="text-muted small mb-3">Behind Crystal Plaza. Issue cleared and regular pickup scheduled.</p>
+                                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                                <span class="small fw-semibold">Downtown Central</span>
+                                            </div>
+                                            <a href="#" class="btn btn-link link-primary p-0 text-decoration-none">View Details <i class="bi bi-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stats Sidebar -->
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 100px; z-index: 10;">
+                        <h5 class="fw-bold mb-4">City Statistics</h5>
+                        <div class="mb-4">
+                            <canvas id="statChart"></canvas>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item p-3 rounded-3 bg-light mb-3">
+                                <h3 class="mb-0 fw-bold">84%</h3>
+                                <p class="small text-muted mb-0">Resolution Rate</p>
+                            </div>
+                            <div class="stat-item p-3 rounded-3 bg-light">
+                                <h3 class="mb-0 fw-bold">4.2d</h3>
+                                <p class="small text-muted mb-0">Avg. Response Time</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-primary-soft rounded-4">
+                            <h6 class="fw-bold text-primary mb-2">Did you know?</h6>
+                            <p class="small mb-0">Our new AI routing system reduced processing time by 40% last month.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="section-padding bg-dark text-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-6 fw-bold">Why SmartCity Connect?</h2>
+                <p class="text-white-50 mx-auto" style="max-width: 600px;">A unified platform for a more responsive and efficient urban environment.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="benefit-card h-100 p-4">
+                        <div class="benefit-icon mb-4"><i class="bi bi-eye-fill"></i></div>
+                        <h4>Transparency</h4>
+                        <p class="text-white-50">Track your report from submission to resolution. No more black holes for your complaints.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="benefit-card h-100 p-4">
+                        <div class="benefit-icon mb-4"><i class="bi bi-speedometer2"></i></div>
+                        <h4>Efficiency</h4>
+                        <p class="text-white-50">Direct routing to relevant departments ensures faster action and less bureaucracy.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="benefit-card h-100 p-4">
+                        <div class="benefit-icon mb-4"><i class="bi bi-people-fill"></i></div>
+                        <h4>Empowerment</h4>
+                        <p class="text-white-50">Become an active participant in your community's maintenance and growth.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card border-0 shadow-lg rounded-5 overflow-hidden">
+                        <div class="row g-0">
+                            <div class="col-lg-4 bg-dark text-white p-5">
+                                <h3 class="fw-bold mb-4">Contact Info</h3>
+                                <p class="text-muted mb-5">Have general feedback or suggestions? Reach out to our team.</p>
+                                
+                                <div class="d-flex mb-4">
+                                    <i class="bi bi-geo-alt text-primary me-3 fs-5"></i>
+                                    <span>Shree L.R Tiwari College</span>
+                                </div>
+                                <div class="d-flex mb-4">
+                                    <i class="bi bi-envelope text-primary me-3 fs-5"></i>
+                                    <span>mukesh.a.vishwakarma25@slrtce.in</span>
+                                </div>
+                                <div class="d-flex mb-5">
+                                    <i class="bi bi-telephone text-primary me-3 fs-5"></i>
+                                    <span>9930931362</span>
+                                </div>
+
+                                <div class="social-links mt-auto">
+                                    <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
+                                    <a href="#" class="me-3"><i class="bi bi-twitter-x"></i></a>
+                                    <a href="#" class="me-3"><i class="bi bi-linkedin"></i></a>
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 p-5">
+                                <h3 class="fw-bold mb-4">Send us a Message</h3>
+                                <form>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control py-3" placeholder="Your Name">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="email" class="form-control py-3" placeholder="Your Email">
+                                        </div>
+                                        <div class="col-12">
+                                            <textarea class="form-control py-3" rows="4" placeholder="How can we help?"></textarea>
+                                        </div>
+                                        <div class="col-12 mt-4">
+                                            <button class="btn btn-primary px-5 py-3 rounded-pill fw-bold">Send Message</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-5 bg-dark border-0">
+        <div class="container text-center">
+            <div class="mb-4">
+                <i class="bi bi-building-fill-gear fs-2 text-primary me-2"></i>
+                <h4 class="d-inline-block fw-bold align-middle mb-0 text-white">SmartCity<span class="text-primary">Connect</span></h4>
+            </div>
+            <ul class="list-inline mb-4">
+                <li class="list-inline-item mx-3"><a href="#" class="text-decoration-none text-muted">Privacy Policy</a></li>
+                <li class="list-inline-item mx-3"><a href="#" class="text-decoration-none text-muted">Terms of Service</a></li>
+                <li class="list-inline-item mx-3"><a href="#" class="text-decoration-none text-muted">API Docs</a></li>
+                <li class="list-inline-item mx-3"><a href="#" class="text-decoration-none text-muted">Government Portal</a></li>
+            </ul>
+            <p class="text-muted small mb-0">&copy; 2026 SmartCity Municipality. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="js/script.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-in-out'
+        });
+    </script>
+</body>
+</html>
