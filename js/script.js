@@ -62,13 +62,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. Report Form Handling (Exactly like sample)
+    // 3. Report Form Handling (Matches sample screenshot UI)
     const reportForm = document.getElementById('reportForm');
     const fileInput = document.getElementById('fileInput');
     const uploadZone = document.querySelector('.upload-zone');
-    const imagePreview = document.getElementById('imagePreview');
     const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-    const removeFileBtn = document.getElementById('removeFile');
+
+    // Make upload zone clickable since it's now a div
+    if (uploadZone && fileInput) {
+        uploadZone.style.cursor = 'pointer';
+        uploadZone.addEventListener('click', () => fileInput.click());
+    }
 
     // File selection & preview logic
     function handleFileSelect(file) {
@@ -88,26 +92,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Show UI state like sample
-        const fileNameDisp = document.getElementById('fileNameDisp');
-        const previewImg = imagePreview.querySelector('img');
-        
-        if (previewImg) {
-            const reader = new FileReader();
-            reader.onload = (e) => previewImg.src = e.target.result;
-            reader.readAsDataURL(file);
-        }
-
-        if (fileNameDisp) {
-            fileNameDisp.innerHTML = `Selected: ${file.name}`;
-        }
-        
-        // Update placeholder to show green icon as per sample
+        // Update placeholder to show green icon as per sample screenshot
         if (uploadPlaceholder) {
             uploadPlaceholder.innerHTML = `
                 <i class="bi bi-file-earmark-check-fill display-4 text-success mb-2"></i>
                 <p class="small text-muted mb-0">Selected: ${file.name}</p>
+                <input type="file" class="d-none" id="fileInput">
             `;
+            // Re-bind input and listener if element was replaced by innerHTML
+            const newFileInput = document.getElementById('fileInput');
+            newFileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
         }
     }
 
@@ -134,12 +128,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         uploadZone.addEventListener('drop', (e) => {
             const file = e.dataTransfer.files[0];
-            fileInput.files = e.dataTransfer.files;
+            const currentFileInput = document.getElementById('fileInput');
+            if (currentFileInput) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                currentFileInput.files = dataTransfer.files;
+            }
             handleFileSelect(file);
         }, false);
     }
 
-    // Form Submission logic (Final Production-Ready)
+    // Form Submission logic
     if (reportForm) {
         reportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -148,19 +147,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const originalBtnContent = submitBtn.innerHTML;
             
             // Basic UI Validation
-            const issueType = reportForm.querySelector('select').value;
-            const location = reportForm.querySelector('input[type="text"]').value;
-            const description = reportForm.querySelector('textarea').value;
-            const evidenceFile = fileInput.files[0];
+            const selectEl = reportForm.querySelector('select');
+            const locationEl = reportForm.querySelector('input[type="text"]');
+            const descEl = reportForm.querySelector('textarea');
+            const currentFileInput = document.getElementById('fileInput');
+            
+            const issueType = selectEl.value;
+            const location = locationEl.value;
+            const description = descEl.value;
+            const evidenceFile = currentFileInput ? currentFileInput.files[0] : null;
 
             if (!issueType || !location || !description) {
                 alert('All fields are required!');
                 return;
             }
 
-            // Start Processing State (Matches sample blue color and text)
+            // Start Processing State (Matches sample blue color)
             submitBtn.disabled = true;
-            submitBtn.style.backgroundColor = '#4e89ff'; // Blue like sample
+            submitBtn.style.backgroundColor = '#4e89ff'; 
             submitBtn.innerHTML = `
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                 Processing...
@@ -193,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     timestamp: serverTimestamp()
                 });
 
-                // 3. Success Alert (Matches browser alert behavior in sample)
+                // 3. Success Alert
                 alert(`Success! Your report has been submitted. Tracking ID: ${trackingId}`);
 
                 // 4. Reset UI
@@ -201,8 +205,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (uploadPlaceholder) {
                     uploadPlaceholder.innerHTML = `
                         <i class="bi bi-cloud-arrow-up display-6 text-primary mb-2"></i>
-                        <p class="small text-muted mb-0">Click to upload or drag & drop (Max 5MB)</p>
+                        <p class="small text-muted mb-0">Click to upload or drag & drop</p>
+                        <input type="file" class="d-none" id="fileInput">
                     `;
+                    const resetFileInput = document.getElementById('fileInput');
+                    resetFileInput.addEventListener('change', (ev) => handleFileSelect(ev.target.files[0]));
                 }
 
             } catch (err) {
@@ -210,13 +217,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Submission failed: ' + err.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.style.backgroundColor = ''; // Restore to CSS primary
+                submitBtn.style.backgroundColor = ''; 
                 submitBtn.innerHTML = originalBtnContent;
             }
         });
     }
 
-    // 4. Smooth Scroll for links
+    // 4. Smooth Scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -228,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         top: target.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    // Close mobile nav
                     const navCollapse = document.getElementById('navbarContent');
                     if (navCollapse && typeof bootstrap !== 'undefined') {
                         const bsCollapse = bootstrap.Collapse.getInstance(navCollapse) || new bootstrap.Collapse(navCollapse, { toggle: false });

@@ -273,7 +273,7 @@
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Issue Type</label>
-                                        <select class="form-select bg-dark-soft border-0 py-3 px-4" required>
+                                        <select class="form-select bg-dark-soft border-0 text-white py-3 px-4" required>
                                             <option value="">Select Category</option>
                                             <option>Noise Pollution</option>
                                             <option>Garbage Dumping</option>
@@ -285,26 +285,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Location</label>
-                                        <input type="text" class="form-control bg-dark-soft border-0 py-3 px-4" placeholder="Street, Area or Landmark" required>
+                                        <input type="text" class="form-control bg-dark-soft border-0 text-white py-3 px-4" placeholder="Street, Area or Landmark" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Description</label>
-                                        <textarea class="form-control bg-dark-soft border-0 py-3 px-4" rows="3" placeholder="Describe the issue in detail..." required></textarea>
+                                        <textarea class="form-control bg-dark-soft border-0 text-white py-3 px-4" rows="3" placeholder="Describe the issue in detail..." required></textarea>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Upload Evidence</label>
-                                        <label for="fileInput" class="upload-zone d-flex flex-column align-items-center justify-content-center py-4 text-center rounded-4 bg-dark-soft cursor-pointer transition-all border-dashed-2">
-                                            <div id="uploadPlaceholder" class="w-100">
-                                                <i class="bi bi-cloud-arrow-up display-6 text-primary mb-2"></i>
-                                                <p class="small text-muted mb-0">Click to upload or drag & drop (Max 5MB)</p>
-                                            </div>
-                                            <div id="imagePreview" class="d-none mt-2 w-100 text-center">
-                                                <img src="" alt="Preview" class="rounded-3 shadow-sm mb-3" style="max-height: 150px; object-fit: cover;">
-                                                <p class="small text-success mb-0 fw-semibold" id="fileNameDisp"></p>
-                                                <button type="button" class="btn btn-sm btn-link text-danger mt-2" id="removeFile">Remove File</button>
-                                            </div>
-                                            <input type="file" class="d-none" id="fileInput" accept="image/png, image/jpeg, image/jpg">
-                                        </label>
+                                        <div class="upload-zone py-4 text-center rounded-3 bg-dark-soft" id="uploadPlaceholder">
+                                            <i class="bi bi-cloud-arrow-up display-6 text-primary mb-2"></i>
+                                            <p class="small text-muted mb-0">Click to upload or drag & drop</p>
+                                            <input type="file" class="d-none" id="fileInput">
+                                        </div>
                                     </div>
                                     <div class="col-12 mt-4">
                                         <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold">Submit Report</button>
