@@ -1,14 +1,34 @@
+// Import Firebase SDKs
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB76xjx9aSH51Bmxaap-4oVxU3aQlsxfww",
+  authDomain: "smart-city-web-201dd.firebaseapp.com",
+  projectId: "smart-city-web-201dd",
+  storageBucket: "smart-city-web-201dd.firebasestorage.app",
+  messagingSenderId: "117966569184",
+  appId: "1:117966569184:web:aefcc460fc63614d005a85"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // 1. Navbar Scroll Effect
     const mainNav = document.getElementById('mainNav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            mainNav.classList.add('navbar-scrolled');
-        } else {
-            mainNav.classList.remove('navbar-scrolled');
-        }
-    });
+    if (mainNav) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                mainNav.classList.add('navbar-scrolled');
+            } else {
+                mainNav.classList.remove('navbar-scrolled');
+            }
+        });
+    }
 
     // 2. City Statistics Chart
     const ctx = document.getElementById('statChart');
@@ -47,25 +67,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. Report Form Submission
+    // 3. Report Form Submission (Integrated with Firebase)
     const reportForm = document.getElementById('reportForm');
     if (reportForm) {
-        reportForm.addEventListener('submit', function(e) {
+        reportForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Get form values
+            const issueType = this.querySelector('select').value;
+            const location = this.querySelector('input[type="text"]').value;
+            const description = this.querySelector('textarea').value;
             
             // Get button and show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
 
-            // Simulate API call
-            setTimeout(() => {
-                alert('Success! Your report has been submitted. Tracking ID: SC-' + Math.floor(Math.random() * 900000 + 100000));
+            try {
+                // Save to Firestore
+                const docRef = await addDoc(collection(db, "reports"), {
+                    issueType: issueType,
+                    location: location,
+                    description: description,
+                    status: "Pending",
+                    timestamp: serverTimestamp()
+                });
+
+                console.log("Document written with ID: ", docRef.id);
+                alert('Success! Your report has been submitted. Tracking ID: ' + docRef.id);
                 reportForm.reset();
+                
+                // Reset file upload zone visualization if exists
+                const uploadPara = document.querySelector('.upload-zone p');
+                const uploadIcon = document.querySelector('.upload-zone i');
+                if (uploadPara) uploadPara.textContent = 'Click to upload or drag & drop';
+                if (uploadIcon) uploadIcon.className = 'bi bi-cloud-arrow-up display-6 text-primary mb-2';
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Error submitting report. Please try again.");
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
-            }, 2000);
+            }
         });
     }
 
@@ -119,8 +164,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Close navbar on mobile after click
                 const navbarCollapse = document.getElementById('navbarContent');
-                if (navbarCollapse.classList.contains('show')) {
-                    const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                if (navbarCollapse) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse, { toggle: false });
                     bsCollapse.hide();
                 }
             }
