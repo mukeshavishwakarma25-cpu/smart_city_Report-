@@ -62,84 +62,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. Report Form Handling
+    // 3. Report Form Handling (Exactly like sample)
     const reportForm = document.getElementById('reportForm');
     const fileInput = document.getElementById('fileInput');
     const uploadZone = document.querySelector('.upload-zone');
     const imagePreview = document.getElementById('imagePreview');
     const uploadPlaceholder = document.getElementById('uploadPlaceholder');
     const removeFileBtn = document.getElementById('removeFile');
-    
-    // Bootstrap Modal for status
-    const statusModalEl = document.getElementById('statusModal');
-    const statusModal = statusModalEl ? new bootstrap.Modal(statusModalEl) : null;
-
-    function showStatusPopup(title, message, type = 'success') {
-        if (!statusModal) return;
-        
-        const iconDiv = document.getElementById('statusIcon');
-        const titleEl = document.getElementById('statusTitle');
-        const messageEl = document.getElementById('statusMessage');
-
-        if (type === 'success') {
-            iconDiv.innerHTML = '<i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>';
-            titleEl.className = 'fw-bold mb-3 text-success';
-        } else {
-            iconDiv.innerHTML = '<i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 4rem;"></i>';
-            titleEl.className = 'fw-bold mb-3 text-danger';
-        }
-
-        titleEl.textContent = title;
-        messageEl.textContent = message;
-        statusModal.show();
-    }
 
     // File selection & preview logic
     function handleFileSelect(file) {
         if (!file) return;
 
-        // Validation: Type
+        // Validation: Type & Size
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         if (!allowedTypes.includes(file.type)) {
-            alert('Invalid file type. Please upload a JPG, JPEG, or PNG image.');
+            alert('Invalid file format. Please upload JPG or PNG.');
             fileInput.value = '';
             return;
         }
 
-        // Validation: Size (5MB)
         if (file.size > 5 * 1024 * 1024) {
-            alert('File too large. Maximum size is 5MB.');
+            alert('File is too large! Maximum limit is 5MB.');
             fileInput.value = '';
             return;
         }
 
-        // Show Preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const previewImg = imagePreview.querySelector('img');
-            const fileNameDisp = document.getElementById('fileNameDisp');
-            if (previewImg) previewImg.src = e.target.result;
-            if (fileNameDisp) {
-                fileNameDisp.innerHTML = `<i class="bi bi-patch-check-fill me-1"></i> ${file.name}`;
-            }
-            
-            imagePreview.classList.remove('d-none');
-            uploadPlaceholder.classList.add('d-none');
-        };
-        reader.readAsDataURL(file);
+        // Show UI state like sample
+        const fileNameDisp = document.getElementById('fileNameDisp');
+        const previewImg = imagePreview.querySelector('img');
+        
+        if (previewImg) {
+            const reader = new FileReader();
+            reader.onload = (e) => previewImg.src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+
+        if (fileNameDisp) {
+            fileNameDisp.innerHTML = `Selected: ${file.name}`;
+        }
+        
+        // Update placeholder to show green icon as per sample
+        if (uploadPlaceholder) {
+            uploadPlaceholder.innerHTML = `
+                <i class="bi bi-file-earmark-check-fill display-4 text-success mb-2"></i>
+                <p class="small text-muted mb-0">Selected: ${file.name}</p>
+            `;
+        }
     }
 
     if (fileInput) {
         fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-    }
-
-    if (removeFileBtn) {
-        removeFileBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            fileInput.value = '';
-            imagePreview.classList.add('d-none');
-            uploadPlaceholder.classList.remove('d-none');
-        });
     }
 
     // Drag and Drop Logic
@@ -166,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, false);
     }
 
-    // Form Submission logic
+    // Form Submission logic (Final Production-Ready)
     if (reportForm) {
         reportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -181,12 +154,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const evidenceFile = fileInput.files[0];
 
             if (!issueType || !location || !description) {
-                alert('Please fill in all required fields.');
+                alert('All fields are required!');
                 return;
             }
 
-            // Start Production-Ready Submission
+            // Start Processing State (Matches sample blue color and text)
             submitBtn.disabled = true;
+            submitBtn.style.backgroundColor = '#4e89ff'; // Blue like sample
             submitBtn.innerHTML = `
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                 Processing...
@@ -200,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // 1. Upload to Storage
                 if (evidenceFile) {
-                    const fileExtension = evidenceFile.name.split('.').pop();
+                    const fileExtension = evidenceFile.name.split('.').pop() || 'png';
                     const fileName = `${trackingId}-${Date.now()}.${fileExtension}`;
                     const storageRef = ref(storage, `reports/${fileName}`);
                     
@@ -219,33 +193,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     timestamp: serverTimestamp()
                 });
 
-                // 3. Success Popup
-                showStatusPopup(
-                    'Success!', 
-                    `Your report has been submitted. Tracking ID: ${trackingId}`, 
-                    'success'
-                );
+                // 3. Success Alert (Matches browser alert behavior in sample)
+                alert(`Success! Your report has been submitted. Tracking ID: ${trackingId}`);
 
-                // 4. Reset Form
+                // 4. Reset UI
                 reportForm.reset();
-                imagePreview.classList.add('d-none');
-                uploadPlaceholder.classList.remove('d-none');
+                if (uploadPlaceholder) {
+                    uploadPlaceholder.innerHTML = `
+                        <i class="bi bi-cloud-arrow-up display-6 text-primary mb-2"></i>
+                        <p class="small text-muted mb-0">Click to upload or drag & drop (Max 5MB)</p>
+                    `;
+                }
 
             } catch (err) {
                 console.error("Submission failed:", err);
-                showStatusPopup(
-                    'Submission Failed', 
-                    err.message || 'Something went wrong. Please try again.', 
-                    'error'
-                );
+                alert('Submission failed: ' + err.message);
             } finally {
                 submitBtn.disabled = false;
+                submitBtn.style.backgroundColor = ''; // Restore to CSS primary
                 submitBtn.innerHTML = originalBtnContent;
             }
         });
     }
 
-    // 5. Smooth Scroll for links
+    // 4. Smooth Scroll for links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
