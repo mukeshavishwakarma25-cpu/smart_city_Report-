@@ -307,7 +307,6 @@
                                         </label>
                                     </div>
                                     <div class="col-12 mt-4">
-                                        <div id="reportFeedback" class="mb-3 d-none"></div>
                                         <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold">Submit Report</button>
                                     </div>
                                 </div>
@@ -524,6 +523,20 @@
             <p class="text-muted small mb-0">&copy; 2026 SmartCity Municipality. All rights reserved.</p>
         </div>
     </footer>
+    
+    <!-- Status Modal -->
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-body text-center p-5">
+                    <div id="statusIcon" class="mb-4"></div>
+                    <h3 class="fw-bold mb-3" id="statusTitle"></h3>
+                    <p class="text-muted mb-4" id="statusMessage"></p>
+                    <button type="button" class="btn btn-primary px-5 py-2 rounded-pill fw-bold" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

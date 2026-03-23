@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. City Statistics Chart (Retained from previous version)
+    // 2. City Statistics Chart
     const ctx = document.getElementById('statChart');
     if (ctx) {
         new Chart(ctx, {
@@ -68,21 +68,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const uploadZone = document.querySelector('.upload-zone');
     const imagePreview = document.getElementById('imagePreview');
     const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-    const reportFeedback = document.getElementById('reportFeedback');
     const removeFileBtn = document.getElementById('removeFile');
+    
+    // Bootstrap Modal for status
+    const statusModalEl = document.getElementById('statusModal');
+    const statusModal = statusModalEl ? new bootstrap.Modal(statusModalEl) : null;
 
-    // Utility: Show feedback messages
-    function showFeedback(message, type = 'info', persist = false) {
-        if (!reportFeedback) return;
-        reportFeedback.className = `alert alert-${type} py-3 shadow-sm d-flex align-items-center`;
-        reportFeedback.innerHTML = `
-            <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'}-fill me-3 fs-4"></i>
-            <div>${message}</div>
-        `;
-        reportFeedback.classList.remove('d-none');
-        if (!persist && type !== 'info') {
-            setTimeout(() => reportFeedback.classList.add('d-none'), 8000);
+    function showStatusPopup(title, message, type = 'success') {
+        if (!statusModal) return;
+        
+        const iconDiv = document.getElementById('statusIcon');
+        const titleEl = document.getElementById('statusTitle');
+        const messageEl = document.getElementById('statusMessage');
+
+        if (type === 'success') {
+            iconDiv.innerHTML = '<i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>';
+            titleEl.className = 'fw-bold mb-3 text-success';
+        } else {
+            iconDiv.innerHTML = '<i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 4rem;"></i>';
+            titleEl.className = 'fw-bold mb-3 text-danger';
         }
+
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        statusModal.show();
     }
 
     // File selection & preview logic
@@ -92,14 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Validation: Type
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         if (!allowedTypes.includes(file.type)) {
-            showFeedback('Invalid file type. Please upload a JPG, JPEG, or PNG image.', 'danger');
+            alert('Invalid file type. Please upload a JPG, JPEG, or PNG image.');
             fileInput.value = '';
             return;
         }
 
         // Validation: Size (5MB)
         if (file.size > 5 * 1024 * 1024) {
-            showFeedback('File too large. Maximum size is 5MB.', 'danger');
+            alert('File too large. Maximum size is 5MB.');
             fileInput.value = '';
             return;
         }
@@ -110,7 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const previewImg = imagePreview.querySelector('img');
             const fileNameDisp = document.getElementById('fileNameDisp');
             if (previewImg) previewImg.src = e.target.result;
-            if (fileNameDisp) fileNameDisp.textContent = file.name;
+            if (fileNameDisp) {
+                fileNameDisp.innerHTML = `<i class="bi bi-patch-check-fill me-1"></i> ${file.name}`;
+            }
             
             imagePreview.classList.remove('d-none');
             uploadPlaceholder.classList.add('d-none');
@@ -170,26 +181,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const evidenceFile = fileInput.files[0];
 
             if (!issueType || !location || !description) {
-                showFeedback('Please fill in all required fields.', 'danger');
+                alert('Please fill in all required fields.');
                 return;
             }
 
-            // Start Submission
+            // Start Production-Ready Submission
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Submitting Report...
+                Processing...
             `;
-            showFeedback('Initializing submission...', 'info', true);
+
+            // Generate Tracking ID
+            const trackingId = 'SC-' + Math.floor(100000 + Math.random() * 900000);
 
             try {
                 let evidenceUrl = '';
 
-                // 1. Upload to Storage if file exists
+                // 1. Upload to Storage
                 if (evidenceFile) {
-                    showFeedback('Uploading image evidence...', 'info', true);
                     const fileExtension = evidenceFile.name.split('.').pop();
-                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
+                    const fileName = `${trackingId}-${Date.now()}.${fileExtension}`;
                     const storageRef = ref(storage, `reports/${fileName}`);
                     
                     const snapshot = await uploadBytes(storageRef, evidenceFile);
@@ -197,8 +209,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // 2. Save to Firestore
-                showFeedback('Saving report data...', 'info', true);
-                const docRef = await addDoc(collection(db, "reports"), {
+                await addDoc(collection(db, "reports"), {
+                    trackingId,
                     issueType,
                     location,
                     description,
@@ -207,9 +219,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     timestamp: serverTimestamp()
                 });
 
-                // 3. Success Feedback
-                showFeedback('<strong>Success!</strong> Report submitted successfully. Our team will review it shortly.', 'success');
-                console.log("Report saved with ID: ", docRef.id);
+                // 3. Success Popup
+                showStatusPopup(
+                    'Success!', 
+                    `Your report has been submitted. Tracking ID: ${trackingId}`, 
+                    'success'
+                );
 
                 // 4. Reset Form
                 reportForm.reset();
@@ -218,7 +233,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } catch (err) {
                 console.error("Submission failed:", err);
-                showFeedback(`Submission failed: ${err.message}. Please try again.`, 'danger');
+                showStatusPopup(
+                    'Submission Failed', 
+                    err.message || 'Something went wrong. Please try again.', 
+                    'error'
+                );
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnContent;
@@ -226,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. Smooth Scroll for links
+    // 5. Smooth Scroll for links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
