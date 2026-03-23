@@ -325,100 +325,84 @@
                 </div>
             </div>
 
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="issue-list">
-                        <!-- Issue Card 1 -->
-                        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" data-aos="fade-right">
-                            <div class="row g-0">
-                                <div class="col-sm-4 bg-cover d-none d-sm-block" style="background-image: url('assets/pothole.png');"></div>
-                                <div class="col-sm-8">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-danger-soft text-danger">Pending Review</span>
-                                            <small class="text-muted">2 hours ago</small>
-                                        </div>
-                                        <h5 class="fw-bold">Severe Pothole Cluster</h5>
-                                        <p class="text-muted small mb-3">Main Highway, Sector 4. Causes significant speed reduction and hazard for motorcyclists.</p>
-                                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
-                                                <span class="small fw-semibold">22.5 N, 88.3 E</span>
-                                            </div>
-                                            <a href="#" class="btn btn-link link-primary p-0 text-decoration-none">View Details <i class="bi bi-arrow-right"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="row g-4" id="issue-grid">
+                <!-- Issue Card 1: Urgent -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden shadow-hover bg-white">
+                        <div class="ratio ratio-16x9">
+                            <img src="assets/flyover.png" class="card-img-top object-fit-cover" alt="Unsafe Flyover Transition">
                         </div>
-                        <!-- Issue Card 2 -->
-                        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" data-aos="fade-right" data-aos-delay="100">
-                            <div class="row g-0">
-                                <div class="col-sm-4 bg-cover d-none d-sm-block" style="background-image: url('assets/streetlight.png');"></div>
-                                <div class="col-sm-8">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-warning-soft text-warning">Work in Progress</span>
-                                            <small class="text-muted">Yesterday</small>
-                                        </div>
-                                        <h5 class="fw-bold">Broken Streetlight #402</h5>
-                                        <p class="text-muted small mb-3">Corner of Oak St. and 5th. Area is completely dark at night, affecting safety.</p>
-                                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
-                                                <span class="small fw-semibold">Oak Street, Zone B</span>
-                                            </div>
-                                            <a href="#" class="btn btn-link link-primary p-0 text-decoration-none">View Details <i class="bi bi-arrow-right"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge badge-urgent px-3 py-2 rounded-pill">Urgent</span>
+                                <small class="text-muted"><i class="bi bi-clock me-1"></i>Recently reported</small>
                             </div>
-                        </div>
-                        <!-- Issue Card 3 -->
-                        <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" data-aos="fade-right" data-aos-delay="200">
-                            <div class="row g-0">
-                                <div class="col-sm-4 bg-cover d-none d-sm-block" style="background-image: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=400');"></div>
-                                <div class="col-sm-8">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-success-soft text-success">Resolved</span>
-                                            <small class="text-muted">3 days ago</small>
-                                        </div>
-                                        <h5 class="fw-bold">Garbage Accumulation</h5>
-                                        <p class="text-muted small mb-3">Behind Crystal Plaza. Issue cleared and regular pickup scheduled.</p>
-                                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
-                                                <span class="small fw-semibold">Downtown Central</span>
-                                            </div>
-                                            <a href="#" class="btn btn-link link-primary p-0 text-decoration-none">View Details <i class="bi bi-arrow-right"></i></a>
-                                        </div>
-                                    </div>
+                            <h5 class="fw-bold mb-3">Unsafe Flyover Transition</h5>
+                            <p class="text-muted small mb-4">A newly constructed flyover abruptly reduces from four lanes to two lanes, creating traffic bottlenecks and high risk of accidents.</p>
+                            <div class="pt-3 border-top">
+                                <div class="mb-2 d-flex align-items-center">
+                                    <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                    <span class="small fw-semibold">Mira Road–Bhayandar Link Road</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-traffic-light text-primary me-2"></i>
+                                    <span class="small text-muted">Traffic / Infrastructure</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Stats Sidebar -->
-                <div class="col-lg-4" data-aos="fade-left">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 100px; z-index: 10;">
-                        <h5 class="fw-bold mb-4">City Statistics</h5>
-                        <div class="mb-4">
-                            <canvas id="statChart"></canvas>
+
+                <!-- Issue Card 2: In Progress -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden shadow-hover bg-white">
+                        <div class="ratio ratio-16x9">
+                            <img src="assets/streetlight_pole.png" class="card-img-top object-fit-cover" alt="Faulty Street Light">
                         </div>
-                        <div class="stats-grid">
-                            <div class="stat-item p-3 rounded-3 bg-light mb-3">
-                                <h3 class="mb-0 fw-bold">84%</h3>
-                                <p class="small text-muted mb-0">Resolution Rate</p>
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge badge-progress px-3 py-2 rounded-pill">In Progress</span>
+                                <small class="text-muted"><i class="bi bi-clock me-1"></i>1 day ago</small>
                             </div>
-                            <div class="stat-item p-3 rounded-3 bg-light">
-                                <h3 class="mb-0 fw-bold">4.2d</h3>
-                                <p class="small text-muted mb-0">Avg. Response Time</p>
+                            <h5 class="fw-bold mb-3">Faulty Street Light</h5>
+                            <p class="text-muted small mb-4">Street lighting is inadequate or non-functional, leading to poor visibility at night and safety concerns for pedestrians.</p>
+                            <div class="pt-3 border-top">
+                                <div class="mb-2 d-flex align-items-center">
+                                    <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                    <span class="small fw-semibold">Golden Nest, Deepak Hospital Rd</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-lightbulb text-primary me-2"></i>
+                                    <span class="small text-muted">Street Light / Safety</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-4 p-3 bg-primary-soft rounded-4">
-                            <h6 class="fw-bold text-primary mb-2">Did you know?</h6>
-                            <p class="small mb-0">Our new AI routing system reduced processing time by 40% last month.</p>
+                    </div>
+                </div>
+
+                <!-- Issue Card 3: Pending -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden shadow-hover bg-white">
+                        <div class="ratio ratio-16x9">
+                            <img src="assets/garbage_sewage.png" class="card-img-top object-fit-cover" alt="Garbage Accumulation">
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge badge-pending px-3 py-2 rounded-pill">Pending</span>
+                                <small class="text-muted"><i class="bi bi-clock me-1"></i>2 days ago</small>
+                            </div>
+                            <h5 class="fw-bold mb-3">Garbage Accumulation</h5>
+                            <p class="text-muted small mb-4">Garbage has been lying for several months due to dug-up roads for ongoing sewage work, causing unhygienic conditions.</p>
+                            <div class="pt-3 border-top">
+                                <div class="mb-2 d-flex align-items-center">
+                                    <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                    <span class="small fw-semibold">Jangid Estate Area, Mira Road</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-trash-can text-primary me-2"></i>
+                                    <span class="small text-muted">Garbage Issue</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
